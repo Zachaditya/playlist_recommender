@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Predictor</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/path/to/font-awesome/all.min.css" />
+    <script src="/path/to/cdn/jquery.min.js"></script>
+    <link rel="stylesheet" href="scripts/strip.css">
+    <script src="scripts/strip.js"></script>
+</head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+         body {
+            background-color: #121212;
+         }
+
+        .strip-carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 10px 0;
+            
+        }
+
+        .card_section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .card {
+            display: flex;
+            width: 12rem;
+            gap: 10px;
+            background-color: transparent;
+            text-align: center;
+            border:transparent;
+        }
+
+        .card:hover{
+            transform: scale(1.1);
+            background-color: #1ed760;
+        }
+
+        .card img{
+            width: auto;
+            position: relative;
+            border-radius: 50%;
+            gap: 10px;
+            text-align: center;
+            
+        }
+
+        .card p{
+            font-size: 12px;
+            justify-content: center;
+            border: transparent;
+            color: #e7e7e7;
+            text-align: center;
+            margin-top: 15px;
+            left: 30%
+        }
+
+
+        .frames {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            white-space: nowrap;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .frame:hover{
+            transform: scale(1.1);
+            background-color: #1ed760;
+        }
+        .frames::-webkit-scrollbar {
+            display: none; 
+        }
+
+        .frame {
+            flex: 0 0 auto;
+            width: 150px;
+            height: 200px;
+            background-color: #222;
+            text-align: center;
+            position: relative;
+        }
+
+        .frame img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .frame p {
+            color: #e7e7e7;
+            padding-top: 5%;
+            font-size: 80%;
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        .arrow-left, .arrow-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 24px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 10; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .arrow-left {
+            left: 10px; 
+        }
+
+        .arrow-right {
+            right: 10px; 
+        }
+
+        .arrow-left:hover, .arrow-right:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .strip-carousel:hover .arrow-left,
+        .strip-carousel:hover .arrow-right {
+            opacity: 1;
+        }
+
+
+    </style>
+
+<body>
+
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-light", style = "background-color: #000000;">
+        <div class="container-fluid">
+            <a style = "color: #e7e7e7">Spotify playlist recommender</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" style = "color: #f9f9f9" href="/main">Search Engine</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style = "color: #f9f9f9" href="/main">Playlist recommender</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style = "color: #f9f9f9" href="/about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!--End Navbar-->
+
+     <!-- Search Engine -->
+
+     <div class="container">
+        <h2 class="text-center", style = "color: #e7e7e7">Song Search Engine</h2>
+        
+        <form action="/search" method="POST" class="d-flex mb-4">
+            <input type="text" name="query" class="form-control" placeholder="Search for a song..." required>
+        </form>
+    
+                {% if message %}
+                <div class="alert alert-warning text-center">{{ message }}</div>
+            {% endif %}
+        
+            {% if results %}
+                <div class="row">
+                    {% for song in results %}
+                   
+                        <div class="col-md-4 mb-3">
+                            
+                            <div class="card" onclick="">
+                                <img src="{{ song['img'] }}" class="card-img-top" alt="{{ song['Name'] }}">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title" style="color: #e7e7e7;">{{ song['Name'] }}</h5>
+                                    <p><strong>Artist:</strong> {{ song['Artist'] }}</p>
+                                    <p><strong>Release Date:</strong> {{ song['Release date'] }}</p>
+                                    <p><strong>Genre:</strong> {{ song['Genre'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <!-- Gallery of Popular Songs -->
+        <div class="container mt-4">
+            <h2 class="text-center mb-4" style="color: #e7e7e7;">Popular Songs</h2>
+
+            <div class="strip-carousel" id="mostviewed">
+                <div class="arrow-left" onclick="scrollCarousel(-1)">&lsaquo;</div>
+                <div class="arrow-right" onclick="scrollCarousel(1)">&rsaquo;</div>
+                <div class="frames" id="songsContainer">
+                    <!-- Songs will be inserted dynamically here -->
+                </div>
+            </div>
+        </div>
+
+
+            <!-- Cart Section -->
+            <h3 class="text-center mt-4">Your Cart</h3>
+            <ul id="cartItems" class="list-group"></ul>
+
+
+
+
+    
+    <!--Gallery of popular artists-->
+    <div class="container mt-4" >
+        <h2 class="text-center mb-4", style = "color: #e7e7e7">Popular Artists:</h2>
+        <div class="row" id="artistsList" style= "margin-left: 7%; justify-content:  center;">
+            <!-- Cards will be inserted here -->
+        </div>
+    </div>
+    
+
+
+    <!-- Footer -->
+
+<footer class="text-center text-lg-start" style = "background-color: #121212" >
+
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase" style = "color: #e7e7e7">About</h5>
+                    <p style = "color: #e7e7e7">This is a product recommendation system designed to help users discover products tailored to their preferences.</p>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase" style = "color: #e7e7e7">Quick Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="/" style = "color: #e7e7e7">Home</a></li>
+                        <li><a href="/main" style = "color: #e7e7e7">Main Page</a></li>
+                        <li><a href="/about"  style = "color: #e7e7e7">About</a></li>
+                    </ul>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase" style = "color: #e7e7e7">Contact</h5>
+                    <ul class="list-unstyled" style = "color: #e7e7e7">
+                        <li><p style = "color: #e7e7e7">Email: zachaditya@berkeley.edu</p></li>
+                        <li><p style = "color: #e7e7e7">Phone: +925 765 2532</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2023 Product Recommendation System
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("/songs")
+                .then(response => response.json())
+                .then(songs => {
+                    const container = document.getElementById("songsContainer");
+
+                    songs.forEach(song => {
+                        const frame = document.createElement("div");
+                        frame.classList.add("frame");
+
+                        frame.innerHTML = `
+                            <img src="${song.img}" alt="${song.name}">
+                            <p>${song.name}</p>
+                        `;
+
+                        container.appendChild(frame);
+                    });
+
+                    updateArrows();
+                    container.addEventListener("scroll", updateArrows);
+                })
+                .catch(error => console.error("Error fetching songs:", error));
+        });
+
+            function scrollCarousel(direction) {
+                const container = document.getElementById("songsContainer");
+                const scrollAmount = 1100;
+
+                container.scrollBy({ left: direction * scrollAmount, behavior: "auto" });
+
+                setTimeout(updateArrows, 500);
+            }
+
+            function updateArrows() {
+                const container = document.getElementById("songsContainer");
+                const leftArrow = document.querySelector(".arrow-left");
+                const rightArrow = document.querySelector(".arrow-right");
+
+                leftArrow.style.opacity = container.scrollLeft > 0 ? "1" : "0.5";
+                rightArrow.style.opacity = container.scrollLeft + container.clientWidth < container.scrollWidth ? "1" : "0.5";
+            }
+
+    </script>
+    <script>
+        fetch("/artists")
+            .then(response => response.json())
+            .then(artists => {
+                const container = document.getElementById("artistsList");
+
+                artists.forEach(artist => {
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-4", "mb-4");
+                    card.innerHTML = `
+                    <div class = "card_section">
+                        <div class =  "card">
+                            <img src="${artist['img']}" class="card-img-top song-image" alt="${artist.name}">
+                            <p class= "card p">${artist.artist}</p>  
+                        </div>
+                    </div>
+                        `;
+                        container.appendChild(card);
+
+    
+                });
+            })
+            .catch(error => console.error("Error fetching artists:", error));
+    </script>
+</body>
+</html>
