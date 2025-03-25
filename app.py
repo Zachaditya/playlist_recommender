@@ -50,6 +50,41 @@ def search_engine(query):
 
     return results_df
 
+def recommend_songs(user_songs, data, similarity_matrix, num_recommendations=2):
+    """
+    Recommend similar songs based on input songs.
+    
+    Args:
+    - user_songs: List of song names input by the user.
+    - data: DataFrame containing the song data.
+    - similarity_matrix: Precomputed similarity matrix.
+    - num_recommendations: Number of recommendations per input song.
+    
+    Returns:
+    - DataFrame of recommended songs.
+    """
+    user_indices = data[data['Name'].isin(user_songs)].index
+
+    recommendations = []
+
+    for user_index in user_indices:
+        similarity_scores = list(enumerate(similarity_matrix[user_index]))
+
+        sorted_scores = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
+        sorted_scores = [score for score in sorted_scores if score[0] != user_index]
+
+        top_recommendations = sorted_scores[:num_recommendations]
+
+        for rec_index, score in top_recommendations:
+            recommendations.append({
+                'Input Song': data.iloc[user_index]['Name'],
+                'Recommended Song': data.iloc[rec_index]['Name'],
+                'Artist': data.iloc[rec_index]['Artist'],
+                'Similarity Score': score
+            })
+
+    return pd.DataFrame(recommendations)
+
 
 @app.route('/')
 def index():
@@ -65,6 +100,7 @@ def get_popular_artists():
     artists = load_popular_artist()  
     return jsonify(artists)
 
+"""Fix below to not render index.html"""
 @app.route('/search', methods=['POST', 'GET'])
 def search():
     if request.method == 'POST':
@@ -77,6 +113,29 @@ def search():
             return render_template('index.html', results=results.to_dict('records'), query=query)
 
     return render_template('index.html')
+
+@app.route('/recommend', methods=['POST', 'GET'])
+def recommend():
+
+
+    features = ['danceability', 'tempo', 'valence', 'acousticness', 'Popularity']
+
+    song_features = recommendation_data[features]
+    similarity_matrix = cosine_similarity(song_features)
+    
+    if request.method == 'POST':
+
+        user_songs = request.form.getlist('user_songs')  
+
+        recommendations = recommend_songs(user_songs, recommendation_data, similarity_matrix, num_recommendations=2)
+
+        if recommendations.empty:
+            message = "No recommendations found."
+            return render_template('main.html', message=message)
+        else:
+            return render_template('main.html', results=recommendations.to_dict('records'), user_songs=user_songs)
+    return render_template('main.html')
+
 
 
 @app.route('/main')
