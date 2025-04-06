@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         frame.innerHTML = `
                     <img src="${song.img}" alt="${song.name}">
                     <p>${song.name}</p>
-                    <button class="btn btn-success" onclick="addToCart('${song.name}', '${song.artist}')">Add to Playlist</button>
+                    <button class="btn btn-success" onclick="addToCart('${song.name}')">Add to Playlist</button>
 
                 `;
 
@@ -23,6 +23,22 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch((error) => console.error("Error fetching songs:", error));
   loadCart();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("cartForm");
+  const hiddenInput = document.getElementById("cartData");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const songNames = cart.map((song) => song.name);
+
+    hiddenInput.value = JSON.stringify(songNames);
+
+    form.submit();
+  });
 });
 
 function scrollCarousel(direction) {
@@ -52,7 +68,21 @@ function addToCart(name, artist) {
   if (!cart.some((song) => song.name === name)) {
     cart.push({ name, artist });
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Succssfully added Song to your cart !");
+    alert("Successfully added to Playlist");
+
+    // Also send to server
+    fetch("/add-to-cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: name, artist: artist }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Server responded:", data);
+      })
+      .catch((error) => console.error("Error sending to server:", error));
   } else {
     alert("This song is already in your cart!");
   }

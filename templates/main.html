@@ -56,37 +56,41 @@
 <!-------------------------------------------------------------------- Body ---------------------------------------------------------------------->
 
        <!-------------------------------------------------- Cart Section -------------------------------------->
-       <h3 class="text-center mt-4" style="color: #e7e7e7">Your Favorite songs</h3>
+       <h3 class="text-center mt-4" style="color: #e7e7e7">Your Favorite Songs:</h3>
             <ul id="cartItems" class="list-group"></ul>
-            <button class = ''></button>
-
+            <form id="cartForm" action="/recommend" method="POST">
+                <input type="hidden" name="cart_data" id="cartData">
+                <button type="submit" class="btn btn-primary mt-3">Get Recommendations</button>
+              </form>
 
        <!-------------------------------------------------- Display recommendations -------------------------------------->
         
         <div class="container mt-4">
         <h2 class="text-center mb-4">Recommended Songs</h2>
-    
         {% if message %}
             <div class="alert alert-warning text-center">{{ message }}</div>
-        {% endif %}
-    
-        {% if results %}
+            {% endif %}
+
+            {% if results %}
             <h4 class="text-center mb-3">Based on: {{ user_songs }}</h4>
             <div class="row">
                 {% for rec in results %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card bg-secondary text-center">
-                            <img src="{{ rec.img }}" class="card-img-top" alt="{{ rec.Recommended_Song }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ rec.Recommended_Song }}</h5>
-                                <p><strong>Artist:</strong> {{ rec.Artist }}</p>
-                                <p><strong>Similarity Score:</strong> {{ rec.Similarity_Score }}</p>
-                            </div>
-                        </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-secondary text-center">
+                    <img src="{{ rec.img }}" class="card-img-top" alt="{{ rec.Recommended_Song }}">
+                    <div class="card-body">
+                        <h5 class="card-title text-white">{{ rec["Recommended Song"] }}</h5>
+                        <p class="card-text text-white"><strong>Artist:</strong> {{ rec["Artist"] }}</p>
+                        <p class="card-text text-white"><strong>Similarity Score:</strong> {{ rec["Similarity Score"]}}</p>
                     </div>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
-        {% endif %}
+            {% endif %}
+
+    
+           
     </div>
     
 

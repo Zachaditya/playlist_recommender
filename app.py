@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from collections import defaultdict
+import json
 
 
 app = Flask(__name__, template_folder='templates')
@@ -65,6 +66,8 @@ def recommend_songs(user_songs, data, similarity_matrix, num_recommendations=2):
     """
     user_indices = data[data['Name'].isin(user_songs)].index
 
+
+
     recommendations = []
 
     for user_index in user_indices:
@@ -80,9 +83,10 @@ def recommend_songs(user_songs, data, similarity_matrix, num_recommendations=2):
                 'Input Song': data.iloc[user_index]['Name'],
                 'Recommended Song': data.iloc[rec_index]['Name'],
                 'Artist': data.iloc[rec_index]['Artist'],
+                'Image': data.iloc[rec_index]['img'],
                 'Similarity Score': score
             })
-
+    print("🎵 Recommendations:", recommendations)
     return pd.DataFrame(recommendations)
 
 
@@ -114,27 +118,35 @@ def search():
 
     return render_template('index.html')
 
-@app.route('/recommend', methods=['POST', 'GET'])
+@app.route('/recommend', methods=['POST'])
 def recommend():
+    # Step 1: Get the raw JSON string from the hidden input
+    raw_data = request.form.get('cart_data')
+
+    if not raw_data:
+        print("nothing")
+        return render_template('main.html', message="Your cart is empty.")
+
+    # Step 2: Parse it into a Python list
+    try:
+        user_songs = json.loads(raw_data)
+    except json.JSONDecodeError:
+        return render_template('main.html', message="Invalid cart data.")
 
 
+    # Step 3: Generate recommendations
     features = ['danceability', 'tempo', 'valence', 'acousticness', 'Popularity']
-
     song_features = recommendation_data[features]
     similarity_matrix = cosine_similarity(song_features)
-    
-    if request.method == 'POST':
 
-        user_songs = request.form.getlist('user_songs')  
+    recommendations = recommend_songs(user_songs, recommendation_data, similarity_matrix, num_recommendations=2)
+    print("🎯 Recommendations preview:", recommendations.head().to_dict('records'))
 
-        recommendations = recommend_songs(user_songs, recommendation_data, similarity_matrix, num_recommendations=2)
 
-        if recommendations.empty:
-            message = "No recommendations found."
-            return render_template('main.html', message=message)
-        else:
-            return render_template('main.html', results=recommendations.to_dict('records'), user_songs=user_songs)
-    return render_template('main.html')
+    if recommendations.empty:
+        return render_template('main.html', message="No recommendations found.")
+    else:
+        return render_template('main.html', results=recommendations.to_dict('records'), user_songs=user_songs)
 
 
 
