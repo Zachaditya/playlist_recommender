@@ -43,9 +43,10 @@
 
 
 
-    <!------------------------------------------- Search Bar ---------------------------------------------------------->
 
-        <div class="container">
+    <!------------------------------------------- Search Bar ---------------------------------------------------------->
+</div>
+    <div class="container">
         
         <form action="/search" method="POST" class="d-flex mb-4">
             <input type="text" name="query" id = "searchBox" class="form-control" placeholder="Search" required>
@@ -56,30 +57,29 @@
     <!-------------------------------------------  End Search Bar ---------------------------------------------------------->
 
 
-       <!-------------------------------------------------- Gallery of Popular Songs -------------------------------------->
 
-    </div>
+    {% if message %}
+    <div class="alert alert-warning text-center">{{ message }}</div>
+{% endif %}
 
-       <div class="container mt-4">
-            <h3 class="text-center mb-4" style="color: #e7e7e7;">Popular Songs</h3>
-            <div class="strip-carousel" id="mostviewed">
-                <div class="arrow-left" onclick="scrollCarousel(-1)">&lsaquo;</div>
-                <div class="arrow-right" onclick="scrollCarousel(1)">&rsaquo;</div>
-                <div class="frames" id="songsContainer">
-                    <!-- Songs will be inserted dynamically here -->
+{% if results %}
+    <div class="results">
+        {% for song in results %}
+       
+                
+                <div class="search_card">
+                    <img src="{{ song['img'] }}" class="card-img-top" alt="{{ song['Name'] }}">
+                    <div class="card-body text-center">
+                        <p class="card-title" style="color: #e7e7e7;">{{ song['Name'] }}</p>
+                        <p><strong>Artist:</strong> {{ song['Artist'] }}</p>
+                        <button class="btn btn-success" onclick="addToCart('${song.name}')">Add to Playlist</button>
+                    </div>
                 </div>
-            </div>
-       <!-------------------------------------------------- End Gallery of Popular Songs -------------------------------------->
-
-   
-    
-    <!--Gallery of popular artists-->
-    <div class="container mt-4" style="padding: 50px">
-        <h3 class="text-center mb-4", style = "color: #e7e7e7">Popular Artists:</h3>
-        <div id="artistsList" class="artistsList">
-            <!-- Cards will be inserted here -->
-        </div>
+        {% endfor %}
     </div>
+{% endif %}
+</div>
+
     
 
 

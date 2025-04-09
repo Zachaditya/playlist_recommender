@@ -28,13 +28,25 @@ def load_popular_artist():
     return df.to_dict(orient="records")
 
 def search_engine(query):
+    """
+    Search for songs based on user input.    
+    Args:
+    - query: User input string: can be artist or song name
+
+    Returns:
+    - DataFrame of recommended songs or artists
+    """
+
     song_names = SE_data['Name']
+    artist_names = SE_data['Artist']
+
+
 
     inverted_index = defaultdict(list)
-    for i, song in enumerate(song_names):
-        for word in song.lower().split():
+    for i, (song, artist) in enumerate(zip(song_names, artist_names)):
+        combined_text = f"{song} {artist}".lower()
+        for word in combined_text.split():
             inverted_index[word].append(i)
-
     query_words = query.lower().split()
 
     matched_indices = set()
@@ -112,11 +124,11 @@ def search():
         results = search_engine(query)
 
         if results.empty:
-            return render_template('index.html', message="No results found.")
+            return render_template('search.html', message="No results found.")
         else:
-            return render_template('index.html', results=results.to_dict('records'), query=query)
+            return render_template('search.html', results=results.to_dict('records'), query=query)
 
-    return render_template('index.html')
+    return render_template('search.html')
 
 @app.route('/recommend', methods=['POST'])
 def recommend():

@@ -1,6 +1,12 @@
 body {
-    background-color: black; /* Change the background color to 121212 */
+    background-color: #121212; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
  } 
+
+ .top_body{
+    background: linear-gradient(#f57d62, #191414);
+      
+ }
 
 .strip-carousel {
     position: relative;
@@ -8,6 +14,34 @@ body {
     overflow: hidden;
     padding: 10px 0;
     
+}
+
+#searchBox {
+    background-color: #1e1e1e;  
+    color: #e7e7e7;             
+    border: 1px solid #555;    
+    border-radius: 20px;        
+    padding: 10px 20px;
+  }
+  
+  #searchBox::placeholder {
+    color: #aaa;                
+  }
+
+.navbar_buttons {
+    color: white;
+    background-color: #1e1e1e;  
+    border-radius: 20px;        
+    color: #e7e7e7;             
+    padding: 10px 20px;
+    text-decoration: none;
+    margin: 5px;
+}
+  
+.navbar_buttons:hover {
+    transform: scale(1.1);
+    background-color: #1ed760;
+
 }
 
 .card_section {
@@ -96,9 +130,20 @@ body {
 }
 
 .btn {
-width: 90%;
-margin-top: 5px;
-font-size: 12px;
+    background-color:transparent;
+    font-weight: bold;
+    border-radius: 20px;
+    width: 90%;
+    margin-top: 5px;
+    font-size: 12px;
+    border: transparent;
+ }
+
+.btn:hover {
+    border: #1e1e1e;
+    background-color: #1e1e1e;
+    color: white;
+    transform: scale(1.05);
 }
 
 
@@ -143,4 +188,44 @@ font-size: 12px;
     color: #e7e7e7;
     border: 1px solid #333;
     margin-top: 10px;
+}
+
+.artistsList {
+    display: flex;
+    flex-wrap: nowrap;        /* Keeps everything on one line */
+    gap: 30px;           /* Space between cards */
+    width: 100%;
+  }
+
+.artistcard{
+    flex: 0 0 50%;          /* Allow shrinking and growing with a base size */
+    max-width: 250px;         /* Prevent getting too big */
+    background-color: #222;
+    color: #e7e7e7;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .results {
+    display: flex;
+    flex-wrap: wrap;               /* Allow wrapping if results overflow */
+    justify-content: center;       /* Center the cards horizontally */
+    gap: 20px;                     /* Space between cards */
+    width: 100%;
+    margin-top: 30px;              /* Optional: adds space above results */
+  }
+
+  .search_card {
+    flex: 0 0 220px;          /* Allow shrinking and growing with a base size */
+    max-width: 250px;         /* Prevent getting too big */
+    background-color: #222;
+    color: #e7e7e7;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+
+.search_card:hover{
+    transform: scale(1.1);
+    background-color: #1ed760;
 }

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         frame.innerHTML = `
                     <img src="${song.img}" alt="${song.name}">
                     <p>${song.name}</p>
-                    <button class="btn btn-success" onclick="addToCart('${song.name}')">Add to Playlist</button>
+                    <button class = "btn"; onclick="addToCart('${song.name}', '${song.artist}')">Add to Playlist</button>
 
                 `;
 
@@ -105,7 +105,7 @@ function loadCart() {
     listItem.innerHTML = `
                                         
               
-                ${song.name} - ${song.artist}
+                ${song["name"]} - ${song["artist"]}
                 <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})" style= 'height: 50%; width: 50%'>Remove</button>
             `;
     cartList.appendChild(listItem);
@@ -127,14 +127,12 @@ fetch("/artists")
 
     artists.forEach((artist) => {
       const card = document.createElement("div");
-      card.classList.add("col-md-4", "mb-4");
+      card.classList.add("artist-card");
       card.innerHTML = `
-        <div class = "card_section">
-            <div class =  "card">
+            <div class =  "artistcard">
                 <img src="${artist["img"]}" class="card-img-top song-image" alt="${artist.name}">
-                <p class= "card p">${artist.artist}</p>  
+                <p >${artist.artist}</p>  
             </div>
-        </div>
             `;
       container.appendChild(card);
     });

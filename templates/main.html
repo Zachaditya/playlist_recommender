@@ -23,35 +23,38 @@
 
     <!------------------------------------------- Navbar ---------------------------------------------------------->
 
-    <nav class="navbar navbar-expand-lg navbar-light", style = "background-color: #000000;">
-        <div class="container-fluid">
-            <a style = "color: #e7e7e7" href = "/">Spotify playlist recommender</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" style = "color: #f9f9f9" href="/main">Playlist recommender</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" style = "color: #f9f9f9" href="/about">About</a>
-                    </li>
-                </ul>
+    <div class = "top_body">
+        <!------------------------------------------- Navbar ---------------------------------------------------------->
+        <nav class="navbar navbar-expand-lg navbar-light" style="justify-content: center;">
+            <div class="container-fluid" >
+                <a  href = "/" class= "navbar_buttons">
+                    Home
+                </a>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        
+                        <li class="nav-item">
+                            <a class="navbar_buttons" style = "color: #f9f9f9" href="/main">Playlist recommender</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="navbar_buttons" style = "color: #f9f9f9" href="/about">About</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
-
+        </nav>
+    
         <!------------------------------------------- End Navbar ---------------------------------------------------------->
 
         <!------------------------------------------- Search Bar  ---------------------------------------------------------->
 
-   
         <div class="container">
-            
+        
             <form action="/search" method="POST" class="d-flex mb-4">
-                <input type="text" name="query" class="form-control" placeholder="Search for a song..." required>
+                <input type="text" name="query" id = "searchBox" class="form-control" placeholder="Search" required>
             </form>
-    
-    </div>
+            </div>
+        </div>
 
 <!-------------------------------------------------------------------- Body ---------------------------------------------------------------------->
 
@@ -66,18 +69,17 @@
        <!-------------------------------------------------- Display recommendations -------------------------------------->
         
         <div class="container mt-4">
-        <h2 class="text-center mb-4">Recommended Songs</h2>
+        <h2 class="text-center mb-4" style = "color: white">Recommended Songs</h2>
         {% if message %}
             <div class="alert alert-warning text-center">{{ message }}</div>
             {% endif %}
 
             {% if results %}
-            <h4 class="text-center mb-3">Based on: {{ user_songs }}</h4>
-            <div class="row">
+            <div class="results">
                 {% for rec in results %}
-                <div class="col-md-4 mb-4">
-                    <div class="card bg-secondary text-center">
-                    <img src="{{ rec.img }}" class="card-img-top" alt="{{ rec.Recommended_Song }}">
+                <div >
+                    <div class="search_card">
+                    <img src="{{ rec['Image'] }}" class="card-img-top" alt="{{ rec['Recommended Song'] }}">
                     <div class="card-body">
                         <h5 class="card-title text-white">{{ rec["Recommended Song"] }}</h5>
                         <p class="card-text text-white"><strong>Artist:</strong> {{ rec["Artist"] }}</p>
